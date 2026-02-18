@@ -120,6 +120,23 @@ export const DUMMY_CONTENTS = [
   },
 ];
 
+// 더미 파일 목록 (콘텐츠별)
+export const DUMMY_FILES: Record<string, Array<{ id: string; content_id: string; filename: string; gdrive_file_id: string; file_size: number; mime_type: string; created_at: string }>> = {
+  'demo-1': [
+    { id: 'f1-1', content_id: 'demo-1', filename: 'seoul_night_01_4K.mp4', gdrive_file_id: '', file_size: 524288000, mime_type: 'video/mp4', created_at: '2026-01-01T00:00:00Z' },
+    { id: 'f1-2', content_id: 'demo-1', filename: 'seoul_night_02_4K.mp4', gdrive_file_id: '', file_size: 389120000, mime_type: 'video/mp4', created_at: '2026-01-01T00:00:00Z' },
+    { id: 'f1-3', content_id: 'demo-1', filename: 'seoul_night_03_hangang.mp4', gdrive_file_id: '', file_size: 456700000, mime_type: 'video/mp4', created_at: '2026-01-01T00:00:00Z' },
+  ],
+  'demo-2': [
+    { id: 'f2-1', content_id: 'demo-2', filename: 'jeju_drone_sunrise_4K.mp4', gdrive_file_id: '', file_size: 712300000, mime_type: 'video/mp4', created_at: '2026-01-04T00:00:00Z' },
+    { id: 'f2-2', content_id: 'demo-2', filename: 'jeju_drone_beach_4K.mp4', gdrive_file_id: '', file_size: 623400000, mime_type: 'video/mp4', created_at: '2026-01-04T00:00:00Z' },
+  ],
+  'demo-3': [
+    { id: 'f3-1', content_id: 'demo-3', filename: 'cafe_interior_01.mp4', gdrive_file_id: '', file_size: 312000000, mime_type: 'video/mp4', created_at: '2026-01-07T00:00:00Z' },
+    { id: 'f3-2', content_id: 'demo-3', filename: 'cafe_latte_art.mp4', gdrive_file_id: '', file_size: 198000000, mime_type: 'video/mp4', created_at: '2026-01-07T00:00:00Z' },
+  ],
+};
+
 export const DUMMY_STATS = {
   totalUsers: 47,
   activeSubscriptions: 12,
