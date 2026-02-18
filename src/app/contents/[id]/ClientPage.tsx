@@ -30,6 +30,7 @@ export default function ClientPage({ id }: { id: string }) {
   const [content, setContent] = useState<(Content & { unlocked: boolean }) | null>(null);
   const [files, setFiles] = useState<ContentFile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [downloading, setDownloading] = useState<string | null>(null);
 
   useEffect(() => {
     fetch(`/api/contents/${id}`)
@@ -150,7 +151,37 @@ export default function ClientPage({ id }: { id: string }) {
                       )}
                     </div>
                   </div>
-                  <Button variant="ghost" size="sm" onClick={() => alert('프리뷰 모드에서는 다운로드할 수 없습니다')}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    loading={downloading === file.gdrive_file_id}
+                    onClick={async () => {
+                      if (!file.gdrive_file_id) {
+                        alert('파일 ID가 없습니다');
+                        return;
+                      }
+                      setDownloading(file.gdrive_file_id);
+                      try {
+                        const res = await fetch(`/api/download/${file.gdrive_file_id}`);
+                        if (!res.ok) {
+                          const err = await res.json();
+                          alert(err.error || '다운로드 실패');
+                          return;
+                        }
+                        const blob = await res.blob();
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = file.filename;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                      } catch {
+                        alert('다운로드 중 오류가 발생했습니다');
+                      } finally {
+                        setDownloading(null);
+                      }
+                    }}
+                  >
                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>

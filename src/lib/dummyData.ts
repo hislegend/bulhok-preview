@@ -123,9 +123,8 @@ export const DUMMY_CONTENTS = [
 // 더미 파일 목록 (콘텐츠별)
 export const DUMMY_FILES: Record<string, Array<{ id: string; content_id: string; filename: string; gdrive_file_id: string; file_size: number; mime_type: string; created_at: string }>> = {
   'demo-1': [
-    { id: 'f1-1', content_id: 'demo-1', filename: 'seoul_night_01_4K.mp4', gdrive_file_id: '', file_size: 524288000, mime_type: 'video/mp4', created_at: '2026-01-01T00:00:00Z' },
-    { id: 'f1-2', content_id: 'demo-1', filename: 'seoul_night_02_4K.mp4', gdrive_file_id: '', file_size: 389120000, mime_type: 'video/mp4', created_at: '2026-01-01T00:00:00Z' },
-    { id: 'f1-3', content_id: 'demo-1', filename: 'seoul_night_03_hangang.mp4', gdrive_file_id: '', file_size: 456700000, mime_type: 'video/mp4', created_at: '2026-01-01T00:00:00Z' },
+    { id: 'f1-1', content_id: 'demo-1', filename: '금광롱폼_1.mp4', gdrive_file_id: '1YT4OID5jDJWIbZwkSyP1zovyckbXJseI', file_size: 307232768, mime_type: 'video/mp4', created_at: '2026-01-01T00:00:00Z' },
+    { id: 'f1-2', content_id: 'demo-1', filename: '녹화_2025_10_26.mp4', gdrive_file_id: '1NFTyRfE3QK_gqYXQQ1kS6hxJBNFaQad5', file_size: 715128832, mime_type: 'video/mp4', created_at: '2026-01-01T00:00:00Z' },
   ],
   'demo-2': [
     { id: 'f2-1', content_id: 'demo-2', filename: 'jeju_drone_sunrise_4K.mp4', gdrive_file_id: '', file_size: 712300000, mime_type: 'video/mp4', created_at: '2026-01-04T00:00:00Z' },
