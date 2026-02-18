@@ -2,15 +2,15 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { previewSignIn } from '@/lib/previewAuth';
 
-export default function LoginPage() {
+export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleSignup = async () => {
     setLoading(true);
-    // 프리뷰 모드: 바로 더미 관리자로 로그인
     previewSignIn();
     router.push('/contents');
   };
@@ -22,13 +22,13 @@ export default function LoginPage() {
           <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <span className="text-white font-bold text-2xl">불</span>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">로그인</h1>
-          <p className="text-gray-500">Google 계정으로 간편하게 시작하세요</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">회원가입</h1>
+          <p className="text-gray-500">프리미엄 영상 소스를 지금 시작하세요</p>
         </div>
 
         <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
           <button
-            onClick={handleGoogleLogin}
+            onClick={handleGoogleSignup}
             disabled={loading}
             className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 hover:border-gray-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -45,22 +45,22 @@ export default function LoginPage() {
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
               </svg>
             )}
-            Google로 계속하기
+            Google로 가입하기
           </button>
 
           <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-700 text-center">
-            🔧 프리뷰 모드: 클릭하면 관리자 계정으로 바로 로그인됩니다
+            🔧 프리뷰 모드: 클릭하면 관리자 계정으로 바로 가입됩니다
           </div>
 
           <div className="mt-6 text-center text-sm text-gray-500">
-            아직 계정이 없으신가요?{' '}
-            <a href="/signup" className="text-orange-500 hover:text-orange-600 font-medium">
-              회원가입
-            </a>
+            이미 계정이 있으신가요?{' '}
+            <Link href="/login" className="text-orange-500 hover:text-orange-600 font-medium">
+              로그인
+            </Link>
           </div>
 
           <div className="mt-4 text-center text-xs text-gray-400">
-            로그인 시 서비스 이용약관에 동의하는 것으로 간주합니다.
+            가입 시 서비스 이용약관 및 개인정보처리방침에 동의하는 것으로 간주합니다.
           </div>
         </div>
       </div>
