@@ -37,9 +37,12 @@ export async function listFolders(parentId: string) {
   return res.data.files || [];
 }
 
-export async function getDownloadUrl(fileId: string): Promise<string> {
-  // Generate a short-lived download URL via proxy
-  return `/api/download/${fileId}`;
+export async function getSignedDownloadUrl(fileId: string): Promise<string> {
+  const auth = getAuth();
+  const client = await auth.getClient();
+  const token = await client.getAccessToken();
+  // Google Drive direct download with access token (1시간 유효)
+  return `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&access_token=${token.token}`;
 }
 
 export async function downloadFileStream(fileId: string) {

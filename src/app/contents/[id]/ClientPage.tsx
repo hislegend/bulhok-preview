@@ -163,18 +163,13 @@ export default function ClientPage({ id }: { id: string }) {
                       setDownloading(file.gdrive_file_id);
                       try {
                         const res = await fetch(`/api/download/${file.gdrive_file_id}`);
+                        const data = await res.json();
                         if (!res.ok) {
-                          const err = await res.json();
-                          alert(err.error || '다운로드 실패');
+                          alert(data.error || '다운로드 실패');
                           return;
                         }
-                        const blob = await res.blob();
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = file.filename;
-                        a.click();
-                        URL.revokeObjectURL(url);
+                        // Google 서버에서 직접 다운로드 (서버 부하 없음)
+                        window.open(data.downloadUrl, '_blank');
                       } catch {
                         alert('다운로드 중 오류가 발생했습니다');
                       } finally {
