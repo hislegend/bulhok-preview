@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { DUMMY_STATS } from '@/lib/dummyData';
 
 interface Stats {
   totalUsers: number;
@@ -18,18 +19,19 @@ const navItems = [
 ];
 
 export default function AdminPage() {
-  const [stats, setStats] = useState<Stats>({ totalUsers: 0, activeSubscriptions: 0, totalContents: 0, monthlyDownloads: 0 });
+  const [stats, setStats] = useState<Stats>(DUMMY_STATS);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch('/api/admin')
       .then(async (res) => {
-        if (res.ok) {
-          const data = await res.json();
-          setStats(data.stats);
-        }
+        if (!res.ok) throw new Error('API unavailable');
+        const data = await res.json();
+        setStats(data.stats);
       })
-      .catch(console.error)
+      .catch(() => {
+        // 정적 배포 시 더미 데이터 유지
+      })
       .finally(() => setLoading(false));
   }, []);
 

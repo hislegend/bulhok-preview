@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import ContentGrid from '@/components/ContentGrid';
 import { Content } from '@/types';
+import { DUMMY_CONTENTS } from '@/lib/dummyData';
 
 interface ContentWithStatus extends Content {
   unlocked: boolean;
@@ -16,19 +16,24 @@ export default function ContentsPage() {
   const [filter, setFilter] = useState<'all' | 'unlocked' | 'locked'>('all');
   const [subscription, setSubscription] = useState<{ started_at: string; expires_at: string } | null>(null);
   const [unlockInfo, setUnlockInfo] = useState<{ unlockedCount: number; nextUnlockDate: string | null } | null>(null);
-  const router = useRouter();
 
   useEffect(() => {
     fetch('/api/contents')
       .then(async (res) => {
+        if (!res.ok) throw new Error('API unavailable');
         const data = await res.json();
         setContents(data.contents || []);
         setSubscription(data.subscription);
         setUnlockInfo(data.unlockInfo);
       })
-      .catch(console.error)
+      .catch(() => {
+        // 정적 배포 시 API 없음 → 더미 데이터 사용
+        setContents(DUMMY_CONTENTS as ContentWithStatus[]);
+        setSubscription(null);
+        setUnlockInfo({ unlockedCount: 3, nextUnlockDate: '2026-02-21T00:00:00Z' });
+      })
       .finally(() => setLoading(false));
-  }, [router]);
+  }, []);
 
   const categories = Array.from(new Set(contents.map(c => c.category).filter(Boolean)));
 
