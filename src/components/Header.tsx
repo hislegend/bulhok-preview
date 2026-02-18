@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { createBrowserSupabaseClient } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
+import { getPreviewUser, previewSignOut } from '@/lib/previewAuth';
 import { Profile } from '@/types';
 
 export default function Header() {
@@ -12,41 +13,53 @@ export default function Header() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const supabase = createBrowserSupabaseClient();
-    supabase.auth.getUser().then(({ data: { user: authUser } }) => {
-      if (authUser) {
-        supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', authUser.id)
-          .single()
-          .then(({ data }) => {
-            setUser(data);
-            setLoading(false);
-          });
-      } else {
-        setLoading(false);
-      }
-    });
+    // 1. 프리뷰 로그인 체크
+    const previewUser = getPreviewUser();
+    if (previewUser) {
+      setUser(previewUser);
+      setLoading(false);
+      return;
+    }
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        setUser(null);
-      }
-    });
+    // 2. Supabase 인증 체크
+    try {
+      const supabase = createBrowserSupabaseClient();
+      supabase.auth.getUser().then(({ data: { user: authUser } }) => {
+        if (authUser) {
+          supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', authUser.id)
+            .single()
+            .then(({ data }) => {
+              setUser(data);
+              setLoading(false);
+            });
+        } else {
+          setLoading(false);
+        }
+      });
 
-    return () => subscription.unsubscribe();
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        if (!session) {
+          setUser(null);
+        }
+      });
+
+      return () => subscription.unsubscribe();
+    } catch {
+      setLoading(false);
+    }
   }, []);
 
   const handleSignOut = async () => {
-    await signOut();
+    previewSignOut();
+    try { await signOut(); } catch {}
     window.location.href = '/';
   };
 
   const isLoggedIn = !!user;
-  // 프리뷰 모드: Supabase 연결 안 되면 어드민 포함 전체 접근 허용
-  const isPreviewMode = !loading && !user;
-  const isAdmin = user?.role === 'admin' || isPreviewMode;
+  const isAdmin = user?.role === 'admin';
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -79,8 +92,6 @@ export default function Header() {
                     로그아웃
                   </button>
                 </div>
-              ) : isPreviewMode ? (
-                <span className="text-xs text-gray-400 bg-gray-100 px-3 py-1.5 rounded-full">🔧 프리뷰 모드</span>
               ) : (
                 <Link href="/login" className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
                   로그인

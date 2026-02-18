@@ -1,21 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import { signInWithGoogle } from '@/lib/auth';
+import { useRouter } from 'next/navigation';
+import { previewSignIn } from '@/lib/previewAuth';
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const router = useRouter();
 
   const handleGoogleLogin = async () => {
     setLoading(true);
-    setError('');
-    try {
-      await signInWithGoogle();
-    } catch {
-      setError('로그인에 실패했습니다. 다시 시도해주세요.');
-      setLoading(false);
-    }
+    // 프리뷰 모드: 바로 더미 관리자로 로그인
+    previewSignIn();
+    router.push('/contents');
   };
 
   return (
@@ -30,10 +27,6 @@ export default function LoginPage() {
         </div>
 
         <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
-          {error && (
-            <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg mb-6">{error}</div>
-          )}
-
           <button
             onClick={handleGoogleLogin}
             disabled={loading}
@@ -54,6 +47,10 @@ export default function LoginPage() {
             )}
             Google로 계속하기
           </button>
+
+          <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-700 text-center">
+            🔧 프리뷰 모드: 클릭하면 관리자 계정으로 바로 로그인됩니다
+          </div>
 
           <div className="mt-6 text-center text-xs text-gray-400">
             로그인 시 서비스 이용약관에 동의하는 것으로 간주합니다.
