@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
-import { getSignedDownloadUrl, getFileMetadata } from '@/lib/gdrive';
+import { downloadFileStream, getFileMetadata } from '@/lib/gdrive';
 
 export async function GET(
   request: NextRequest,
@@ -14,20 +14,29 @@ export async function GET(
     }
 
     // TODO: Supabase 연동 시 인증/구독/해금 체크 추가
+    // TODO: fileId 화이트리스트 체크 (DB에 등록된 파일만 다운로드 허용)
 
-    // 임시 다운로드 URL 발급 (1시간 유효)
-    // 사용자가 Google 서버에서 직접 다운로드 → 서버 부하 없음
-    const downloadUrl = await getSignedDownloadUrl(fileId);
     const metadata = await getFileMetadata(fileId);
+    const stream = await downloadFileStream(fileId);
 
-    return NextResponse.json({
-      downloadUrl,
-      filename: metadata.name,
-      size: metadata.size,
-      mimeType: metadata.mimeType,
+    // Node readable → Web ReadableStream (스트리밍)
+    const webStream = new ReadableStream({
+      start(controller) {
+        stream.on('data', (chunk: Buffer) => controller.enqueue(chunk));
+        stream.on('end', () => controller.close());
+        stream.on('error', (err: Error) => controller.error(err));
+      },
+    });
+
+    return new NextResponse(webStream, {
+      headers: {
+        'Content-Type': metadata.mimeType || 'application/octet-stream',
+        'Content-Disposition': `attachment; filename="${encodeURIComponent(metadata.name || 'file')}"`,
+        ...(metadata.size ? { 'Content-Length': metadata.size } : {}),
+      },
     });
   } catch (err) {
     console.error('Download API error:', err);
-    return NextResponse.json({ error: '다운로드 URL 생성 중 오류가 발생했습니다' }, { status: 500 });
+    return NextResponse.json({ error: '다운로드 중 오류가 발생했습니다' }, { status: 500 });
   }
 }

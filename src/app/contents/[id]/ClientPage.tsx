@@ -30,7 +30,6 @@ export default function ClientPage({ id }: { id: string }) {
   const [content, setContent] = useState<(Content & { unlocked: boolean }) | null>(null);
   const [files, setFiles] = useState<ContentFile[]>([]);
   const [loading, setLoading] = useState(true);
-  const [downloading, setDownloading] = useState<string | null>(null);
 
   useEffect(() => {
     fetch(`/api/contents/${id}`)
@@ -154,27 +153,13 @@ export default function ClientPage({ id }: { id: string }) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    loading={downloading === file.gdrive_file_id}
-                    onClick={async () => {
+                    onClick={() => {
                       if (!file.gdrive_file_id) {
                         alert('파일 ID가 없습니다');
                         return;
                       }
-                      setDownloading(file.gdrive_file_id);
-                      try {
-                        const res = await fetch(`/api/download/${file.gdrive_file_id}`);
-                        const data = await res.json();
-                        if (!res.ok) {
-                          alert(data.error || '다운로드 실패');
-                          return;
-                        }
-                        // Google 서버에서 직접 다운로드 (서버 부하 없음)
-                        window.open(data.downloadUrl, '_blank');
-                      } catch {
-                        alert('다운로드 중 오류가 발생했습니다');
-                      } finally {
-                        setDownloading(null);
-                      }
+                      // 서버 프록시 다운로드 (토큰 노출 없음)
+                      window.open(`/api/download/${file.gdrive_file_id}`, '_blank');
                     }}
                   >
                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
