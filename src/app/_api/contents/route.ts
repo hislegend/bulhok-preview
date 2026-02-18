@@ -22,17 +22,17 @@ export async function GET(request: NextRequest) {
     const supabase = await getSupabase(request);
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) {
-      return NextResponse.json({ error: '인증이 필요합니다' }, { status: 401 });
+    // Get subscription (only if logged in)
+    let subscription = null;
+    if (user) {
+      const { data: sub } = await supabase
+        .from('subscriptions')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('status', 'active')
+        .single();
+      subscription = sub;
     }
-
-    // Get subscription
-    const { data: subscription } = await supabase
-      .from('subscriptions')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('status', 'active')
-      .single();
 
     // Get unlock settings
     const { data: settingsData } = await supabase

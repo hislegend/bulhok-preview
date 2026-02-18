@@ -21,10 +21,6 @@ export default function ContentsPage() {
   useEffect(() => {
     fetch('/api/contents')
       .then(async (res) => {
-        if (res.status === 401) {
-          router.push('/login');
-          return;
-        }
         const data = await res.json();
         setContents(data.contents || []);
         setSubscription(data.subscription);
