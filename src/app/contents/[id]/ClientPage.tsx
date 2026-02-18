@@ -7,6 +7,19 @@ import TimeLockBadge from '@/components/TimeLockBadge';
 import { Content, ContentFile } from '@/types';
 import { DUMMY_CONTENTS, DUMMY_FILES } from '@/lib/dummyData';
 
+const CATEGORY_STYLES: Record<string, { gradient: string; icon: string }> = {
+  '도시/야경': { gradient: 'from-indigo-600 via-purple-600 to-blue-800', icon: '🌃' },
+  '자연/풍경': { gradient: 'from-emerald-500 via-teal-500 to-cyan-600', icon: '🏔️' },
+  '라이프스타일': { gradient: 'from-amber-500 via-orange-400 to-yellow-500', icon: '☕' },
+  '패션/뷰티': { gradient: 'from-pink-500 via-rose-400 to-fuchsia-500', icon: '👗' },
+  '푸드': { gradient: 'from-red-500 via-orange-500 to-amber-500', icon: '🍽️' },
+  '비즈니스': { gradient: 'from-slate-600 via-gray-500 to-zinc-600', icon: '💼' },
+  '건축/인테리어': { gradient: 'from-stone-500 via-amber-600 to-orange-700', icon: '🏛️' },
+  '스포츠/건강': { gradient: 'from-green-500 via-lime-500 to-emerald-500', icon: '💪' },
+};
+
+const DEFAULT_STYLE = { gradient: 'from-gray-600 via-gray-500 to-gray-700', icon: '🎬' };
+
 function formatFileSize(bytes: number): string {
   if (bytes >= 1073741824) return `${(bytes / 1073741824).toFixed(1)} GB`;
   if (bytes >= 1048576) return `${(bytes / 1048576).toFixed(0)} MB`;
@@ -82,19 +95,21 @@ export default function ClientPage({ id }: { id: string }) {
       </div>
 
       {/* Thumbnail */}
-      <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl mb-8 flex items-center justify-center overflow-hidden">
-        {content.thumbnail_url ? (
-          <img src={content.thumbnail_url} alt={content.title} className="w-full h-full object-cover" />
-        ) : (
-          <div className="text-center text-gray-400">
-            <svg className="w-16 h-16 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <p className="text-sm">미리보기</p>
+      {(() => {
+        const style = CATEGORY_STYLES[content.category || ''] || DEFAULT_STYLE;
+        return (
+          <div className={`aspect-video bg-gradient-to-br ${style.gradient} rounded-2xl mb-8 flex items-center justify-center overflow-hidden`}>
+            {content.thumbnail_url ? (
+              <img src={content.thumbnail_url} alt={content.title} className="w-full h-full object-cover" />
+            ) : (
+              <div className="text-center text-white/70">
+                <span className="text-6xl block mb-3">{style.icon}</span>
+                <p className="text-sm font-medium tracking-wider uppercase">{content.category || '미리보기'}</p>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        );
+      })()}
 
       {!content.unlocked ? (
         <div className="bg-gray-50 border border-gray-200 rounded-2xl p-8 text-center">

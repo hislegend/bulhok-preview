@@ -2,22 +2,37 @@ import Link from 'next/link';
 import TimeLockBadge from './TimeLockBadge';
 import { Content } from '@/types';
 
+const CATEGORY_STYLES: Record<string, { gradient: string; icon: string }> = {
+  '도시/야경': { gradient: 'from-indigo-600 via-purple-600 to-blue-800', icon: '🌃' },
+  '자연/풍경': { gradient: 'from-emerald-500 via-teal-500 to-cyan-600', icon: '🏔️' },
+  '라이프스타일': { gradient: 'from-amber-500 via-orange-400 to-yellow-500', icon: '☕' },
+  '패션/뷰티': { gradient: 'from-pink-500 via-rose-400 to-fuchsia-500', icon: '👗' },
+  '푸드': { gradient: 'from-red-500 via-orange-500 to-amber-500', icon: '🍽️' },
+  '비즈니스': { gradient: 'from-slate-600 via-gray-500 to-zinc-600', icon: '💼' },
+  '건축/인테리어': { gradient: 'from-stone-500 via-amber-600 to-orange-700', icon: '🏛️' },
+  '스포츠/건강': { gradient: 'from-green-500 via-lime-500 to-emerald-500', icon: '💪' },
+};
+
+const DEFAULT_STYLE = { gradient: 'from-gray-600 via-gray-500 to-gray-700', icon: '🎬' };
+
 interface ContentCardProps {
   content: Content & { unlocked: boolean };
 }
 
 export default function ContentCard({ content }: ContentCardProps) {
+  const style = CATEGORY_STYLES[content.category || ''] || DEFAULT_STYLE;
+
   return (
     <Link
       href={content.unlocked ? `/contents/${content.id}` : '#'}
       className={`group block rounded-xl overflow-hidden border border-gray-200 bg-white transition-all ${
         content.unlocked
-          ? 'hover:shadow-lg hover:border-orange-300 cursor-pointer'
+          ? 'hover:shadow-lg hover:border-orange-300 hover:-translate-y-0.5 cursor-pointer'
           : 'opacity-60 cursor-not-allowed'
       }`}
     >
       {/* Thumbnail */}
-      <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
+      <div className={`aspect-video bg-gradient-to-br ${style.gradient} relative overflow-hidden`}>
         {content.thumbnail_url ? (
           <img
             src={content.thumbnail_url}
@@ -25,10 +40,9 @@ export default function ContentCard({ content }: ContentCardProps) {
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <svg className="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-            </svg>
+          <div className="w-full h-full flex flex-col items-center justify-center text-white/80">
+            <span className="text-4xl mb-2">{style.icon}</span>
+            <span className="text-xs font-medium tracking-wider uppercase opacity-60">{content.category || 'Video'}</span>
           </div>
         )}
         {!content.unlocked && (
