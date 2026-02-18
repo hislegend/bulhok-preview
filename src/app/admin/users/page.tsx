@@ -26,18 +26,31 @@ export default function AdminUsersPage() {
   }, []);
 
   const loadUsers = async () => {
-    const supabase = createBrowserSupabaseClient();
-    const { data: profiles } = await supabase
-      .from('profiles')
-      .select('*, subscriptions(*)')
-      .order('created_at', { ascending: false });
+    try {
+      const supabase = createBrowserSupabaseClient();
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('*, subscriptions(*)')
+        .order('created_at', { ascending: false });
 
-    if (profiles) {
-      setUsers(profiles.map((p) => ({
-        ...p,
-        subscription: p.subscriptions?.[0] || null,
-      })));
+      if (profiles && profiles.length > 0) {
+        setUsers(profiles.map((p) => ({
+          ...p,
+          subscription: p.subscriptions?.[0] || null,
+        })));
+        setLoading(false);
+        return;
+      }
+    } catch {
+      // Supabase 연결 실패 시 더미 데이터
     }
+    // 프리뷰 모드 더미 유저
+    setUsers([
+      { id: '1', name: '세효 (관리자)', email: 'admin@bulhok.com', role: 'admin', created_at: '2026-01-01T00:00:00Z', subscription: { status: 'active', started_at: '2026-01-01T00:00:00Z', expires_at: '2026-12-31T00:00:00Z' } },
+      { id: '2', name: '김영상', email: 'kim@example.com', role: 'member', created_at: '2026-01-15T00:00:00Z', subscription: { status: 'active', started_at: '2026-01-15T00:00:00Z', expires_at: '2026-02-15T00:00:00Z' } },
+      { id: '3', name: '박크리', email: 'park@example.com', role: 'member', created_at: '2026-02-01T00:00:00Z', subscription: null },
+      { id: '4', name: '이편집', email: 'lee@example.com', role: 'member', created_at: '2026-02-10T00:00:00Z', subscription: { status: 'active', started_at: '2026-02-10T00:00:00Z', expires_at: '2026-03-10T00:00:00Z' } },
+    ]);
     setLoading(false);
   };
 

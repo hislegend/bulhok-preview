@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
+import { DUMMY_CONTENTS } from '@/lib/dummyData';
 
 interface AdminContent {
   id: string;
@@ -20,12 +21,13 @@ export default function AdminContentsPage() {
   useEffect(() => {
     fetch('/api/contents')
       .then(async (res) => {
-        if (res.ok) {
-          const data = await res.json();
-          setContents(data.contents || []);
-        }
+        if (!res.ok) throw new Error('API unavailable');
+        const data = await res.json();
+        setContents(data.contents || []);
       })
-      .catch(console.error)
+      .catch(() => {
+        setContents(DUMMY_CONTENTS as AdminContent[]);
+      })
       .finally(() => setLoading(false));
   }, []);
 

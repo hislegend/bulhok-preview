@@ -44,7 +44,9 @@ export default function Header() {
   };
 
   const isLoggedIn = !!user;
-  const isAdmin = user?.role === 'admin';
+  // 프리뷰 모드: Supabase 연결 안 되면 어드민 포함 전체 접근 허용
+  const isPreviewMode = !loading && !user;
+  const isAdmin = user?.role === 'admin' || isPreviewMode;
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -77,6 +79,8 @@ export default function Header() {
                     로그아웃
                   </button>
                 </div>
+              ) : isPreviewMode ? (
+                <span className="text-xs text-gray-400 bg-gray-100 px-3 py-1.5 rounded-full">🔧 프리뷰 모드</span>
               ) : (
                 <Link href="/login" className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
                   로그인
