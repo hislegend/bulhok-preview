@@ -3,10 +3,16 @@ import { GoogleAuth } from 'google-auth-library';
 import { Readable } from 'stream';
 
 function getAuth() {
-  const credentials = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
-  if (!credentials) throw new Error('GOOGLE_SERVICE_ACCOUNT_KEY not configured');
+  const raw = process.env.GOOGLE_SERVICE_ACCOUNT_KEY || process.env.GOOGLE_SA_KEY;
+  if (!raw) throw new Error('GOOGLE_SERVICE_ACCOUNT_KEY not configured');
 
-  const parsed = JSON.parse(credentials);
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    // Netlify 환경변수에서 이스케이프된 줄바꿈 처리
+    parsed = JSON.parse(raw.replace(/\\n/g, '\n'));
+  }
   return new GoogleAuth({
     credentials: parsed,
     scopes: ['https://www.googleapis.com/auth/drive'],

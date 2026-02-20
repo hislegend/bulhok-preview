@@ -35,8 +35,8 @@ export async function GET(
         ...(metadata.size ? { 'Content-Length': metadata.size } : {}),
       },
     });
-  } catch (err) {
+  } catch (err: any) {
     console.error('Download API error:', err);
-    return NextResponse.json({ error: '다운로드 중 오류가 발생했습니다' }, { status: 500 });
+    return NextResponse.json({ error: '다운로드 중 오류가 발생했습니다', detail: err.message }, { status: 500 });
   }
 }
