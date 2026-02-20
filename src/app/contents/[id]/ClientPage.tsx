@@ -152,30 +152,12 @@ export default function ClientPage({ id }: { id: string }) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={async () => {
+                    onClick={() => {
                       if (!file.gdrive_file_id) {
                         alert('파일 ID가 없습니다');
                         return;
                       }
-                      try {
-                        // 1) 서버에서 임시 토큰 발급
-                        const res = await fetch(`/api/download/${file.gdrive_file_id}`);
-                        if (!res.ok) throw new Error('토큰 발급 실패');
-                        const { token, url } = await res.json();
-                        // 2) Google Drive에서 직접 다운로드 (Bearer 헤더)
-                        const dlRes = await fetch(url, {
-                          headers: { Authorization: `Bearer ${token}` },
-                        });
-                        if (!dlRes.ok) throw new Error('다운로드 실패');
-                        const blob = await dlRes.blob();
-                        const a = document.createElement('a');
-                        a.href = URL.createObjectURL(blob);
-                        a.download = file.filename;
-                        a.click();
-                        URL.revokeObjectURL(a.href);
-                      } catch {
-                        alert('다운로드에 실패했습니다. 다시 시도해주세요.');
-                      }
+                      window.open(`/api/download/${file.gdrive_file_id}`, '_blank');
                     }}
                   >
                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
