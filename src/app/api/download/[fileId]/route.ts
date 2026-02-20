@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
-import { downloadFileStream, getFileMetadata } from '@/lib/gdrive';
+import { getSignedDownloadUrl } from '@/lib/gdrive';
 
 export async function GET(
   request: NextRequest,
@@ -14,27 +14,11 @@ export async function GET(
     }
 
     // TODO: Supabase 연동 시 인증/구독/해금 체크 추가
-    // TODO: fileId 화이트리스트 체크 (DB에 등록된 파일만 다운로드 허용)
 
-    const metadata = await getFileMetadata(fileId);
-    const stream = await downloadFileStream(fileId);
+    // 서명된 다운로드 URL 발급 → 리다이렉트 (서버 대역폭 제로)
+    const url = await getSignedDownloadUrl(fileId);
+    return NextResponse.redirect(url);
 
-    // Node readable → Web ReadableStream (스트리밍)
-    const webStream = new ReadableStream({
-      start(controller) {
-        stream.on('data', (chunk: Buffer) => controller.enqueue(chunk));
-        stream.on('end', () => controller.close());
-        stream.on('error', (err: Error) => controller.error(err));
-      },
-    });
-
-    return new NextResponse(webStream, {
-      headers: {
-        'Content-Type': metadata.mimeType || 'application/octet-stream',
-        'Content-Disposition': `attachment; filename="${encodeURIComponent(metadata.name || 'file')}"`,
-        ...(metadata.size ? { 'Content-Length': metadata.size } : {}),
-      },
-    });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error('Download API error:', err);
