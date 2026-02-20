@@ -47,9 +47,12 @@ export async function listFolders(parentId: string) {
   return data.files || [];
 }
 
-export async function getSignedDownloadUrl(fileId: string): Promise<string> {
+export async function getSignedDownloadUrl(fileId: string): Promise<{ token: string; url: string }> {
   const token = await getAccessToken();
-  return `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&access_token=${token}`;
+  return {
+    token,
+    url: `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+  };
 }
 
 export async function downloadFileStream(fileId: string) {
