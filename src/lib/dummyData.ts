@@ -124,22 +124,22 @@ export const DUMMY_CONTENTS = [
 // 더미 파일 목록 (콘텐츠별)
 export const DUMMY_FILES: Record<string, Array<{ id: string; content_id: string; filename: string; gdrive_file_id: string; file_size: number; mime_type: string; created_at: string }>> = {
   'demo-1': [
-    { id: 'f1-1', content_id: 'demo-1', filename: 'MacBook_Pro_16_M4Max_언박싱.mp4', gdrive_file_id: '1YT4OID5jDJWIbZwkSyP1zovyckbXJseI', file_size: 512000000, mime_type: 'video/mp4', created_at: '2026-01-01T00:00:00Z' },
+    { id: 'f1-1', content_id: 'demo-1', filename: 'MacBook_Pro_16_M4Max_언박싱.mp4', gdrive_file_id: '1NFTyRfE3QK_gqYXQQ1kS6hxJBNFaQad5', file_size: 512000000, mime_type: 'video/mp4', created_at: '2026-01-01T00:00:00Z' },
     { id: 'f1-2', content_id: 'demo-1', filename: 'MacBook_Pro_16_외관디테일_4K.mp4', gdrive_file_id: '1NFTyRfE3QK_gqYXQQ1kS6hxJBNFaQad5', file_size: 715128832, mime_type: 'video/mp4', created_at: '2026-01-01T00:00:00Z' },
-    { id: 'f1-3', content_id: 'demo-1', filename: 'MacBook_Pro_16_키보드_포트_클로즈업.mp4', gdrive_file_id: '1YT4OID5jDJWIbZwkSyP1zovyckbXJseI', file_size: 328000000, mime_type: 'video/mp4', created_at: '2026-01-01T00:00:00Z' },
+    { id: 'f1-3', content_id: 'demo-1', filename: 'MacBook_Pro_16_키보드_포트_클로즈업.mp4', gdrive_file_id: '1NFTyRfE3QK_gqYXQQ1kS6hxJBNFaQad5', file_size: 328000000, mime_type: 'video/mp4', created_at: '2026-01-01T00:00:00Z' },
     { id: 'f1-4', content_id: 'demo-1', filename: 'MacBook_Pro_16_벤치마크_화면녹화.mp4', gdrive_file_id: '1NFTyRfE3QK_gqYXQQ1kS6hxJBNFaQad5', file_size: 198000000, mime_type: 'video/mp4', created_at: '2026-01-01T00:00:00Z' },
-    { id: 'f1-5', content_id: 'demo-1', filename: 'MacBook_Pro_16_슬로모션_개폐.mp4', gdrive_file_id: '1YT4OID5jDJWIbZwkSyP1zovyckbXJseI', file_size: 245000000, mime_type: 'video/mp4', created_at: '2026-01-01T00:00:00Z' },
+    { id: 'f1-5', content_id: 'demo-1', filename: 'MacBook_Pro_16_슬로모션_개폐.mp4', gdrive_file_id: '1NFTyRfE3QK_gqYXQQ1kS6hxJBNFaQad5', file_size: 245000000, mime_type: 'video/mp4', created_at: '2026-01-01T00:00:00Z' },
   ],
   'demo-2': [
-    { id: 'f2-1', content_id: 'demo-2', filename: 'LG_Gram17_2026_언박싱.mp4', gdrive_file_id: '1YT4OID5jDJWIbZwkSyP1zovyckbXJseI', file_size: 412300000, mime_type: 'video/mp4', created_at: '2026-01-04T00:00:00Z' },
+    { id: 'f2-1', content_id: 'demo-2', filename: 'LG_Gram17_2026_언박싱.mp4', gdrive_file_id: '1NFTyRfE3QK_gqYXQQ1kS6hxJBNFaQad5', file_size: 412300000, mime_type: 'video/mp4', created_at: '2026-01-04T00:00:00Z' },
     { id: 'f2-2', content_id: 'demo-2', filename: 'LG_Gram17_두께비교_슬로모션.mp4', gdrive_file_id: '1NFTyRfE3QK_gqYXQQ1kS6hxJBNFaQad5', file_size: 223400000, mime_type: 'video/mp4', created_at: '2026-01-04T00:00:00Z' },
-    { id: 'f2-3', content_id: 'demo-2', filename: 'LG_Gram17_디스플레이_색감테스트.mp4', gdrive_file_id: '1YT4OID5jDJWIbZwkSyP1zovyckbXJseI', file_size: 356000000, mime_type: 'video/mp4', created_at: '2026-01-04T00:00:00Z' },
+    { id: 'f2-3', content_id: 'demo-2', filename: 'LG_Gram17_디스플레이_색감테스트.mp4', gdrive_file_id: '1NFTyRfE3QK_gqYXQQ1kS6hxJBNFaQad5', file_size: 356000000, mime_type: 'video/mp4', created_at: '2026-01-04T00:00:00Z' },
     { id: 'f2-4', content_id: 'demo-2', filename: 'LG_Gram17_무게측정_B롤.mp4', gdrive_file_id: '1NFTyRfE3QK_gqYXQQ1kS6hxJBNFaQad5', file_size: 178000000, mime_type: 'video/mp4', created_at: '2026-01-04T00:00:00Z' },
   ],
   'demo-3': [
-    { id: 'f3-1', content_id: 'demo-3', filename: 'BESPOKE_4도어_설치과정.mp4', gdrive_file_id: '1YT4OID5jDJWIbZwkSyP1zovyckbXJseI', file_size: 612000000, mime_type: 'video/mp4', created_at: '2026-01-07T00:00:00Z' },
+    { id: 'f3-1', content_id: 'demo-3', filename: 'BESPOKE_4도어_설치과정.mp4', gdrive_file_id: '1NFTyRfE3QK_gqYXQQ1kS6hxJBNFaQad5', file_size: 612000000, mime_type: 'video/mp4', created_at: '2026-01-07T00:00:00Z' },
     { id: 'f3-2', content_id: 'demo-3', filename: 'BESPOKE_내부수납_클로즈업.mp4', gdrive_file_id: '1NFTyRfE3QK_gqYXQQ1kS6hxJBNFaQad5', file_size: 298000000, mime_type: 'video/mp4', created_at: '2026-01-07T00:00:00Z' },
-    { id: 'f3-3', content_id: 'demo-3', filename: 'BESPOKE_패널교체_타임랩스.mp4', gdrive_file_id: '1YT4OID5jDJWIbZwkSyP1zovyckbXJseI', file_size: 185000000, mime_type: 'video/mp4', created_at: '2026-01-07T00:00:00Z' },
+    { id: 'f3-3', content_id: 'demo-3', filename: 'BESPOKE_패널교체_타임랩스.mp4', gdrive_file_id: '1NFTyRfE3QK_gqYXQQ1kS6hxJBNFaQad5', file_size: 185000000, mime_type: 'video/mp4', created_at: '2026-01-07T00:00:00Z' },
   ],
 };
 
