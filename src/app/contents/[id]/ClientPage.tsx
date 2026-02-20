@@ -157,8 +157,8 @@ export default function ClientPage({ id }: { id: string }) {
                         alert('파일 ID가 없습니다');
                         return;
                       }
-                      // 구글 드라이브 직접 다운로드
-                      window.open(`https://drive.google.com/uc?export=download&id=${file.gdrive_file_id}`, '_blank');
+                      // Netlify Function 경유 다운로드 (서비스 계정 인증, 토큰 비노출)
+                      window.open(`/.netlify/functions/download?fileId=${file.gdrive_file_id}`, '_blank');
                     }}
                   >
                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
