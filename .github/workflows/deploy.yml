@@ -29,17 +29,9 @@ jobs:
 
       - run: npm ci
 
-      # GitHub Pages는 정적 호스팅 → API routes 제거 후 static export
-      - name: Prepare for static export
-        run: |
-          rm -rf src/app/api
-          # next.config에 output: 'export' 추가
-          node -e "
-            import fs from 'fs';
-            let cfg = fs.readFileSync('next.config.mjs','utf8');
-            cfg = cfg.replace('trailingSlash: true,', \"output: 'export',\\n  trailingSlash: true,\");
-            fs.writeFileSync('next.config.mjs', cfg);
-          "
+      # GitHub Pages는 정적 호스팅 → API routes 제거
+      - name: Remove API routes for static export
+        run: rm -rf src/app/api
 
       - run: npm run build
 
