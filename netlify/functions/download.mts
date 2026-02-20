@@ -7,6 +7,20 @@ const ALLOWED_FILE_IDS = new Set([
   "1NFTyRfE3QK_gqYXQQ1kS6hxJBNFaQad5",
 ]);
 
+function parseServiceAccountKey() {
+  const raw = process.env.GOOGLE_SA_KEY || "";
+  if (!raw) throw new Error("GOOGLE_SA_KEY 환경변수가 설정되지 않았습니다");
+
+  try {
+    // Netlify 환경변수에서 이스케이프된 줄바꿈 처리
+    const fixed = raw.replace(/\\n/g, "\n");
+    return JSON.parse(fixed);
+  } catch {
+    // 이미 올바른 JSON인 경우
+    return JSON.parse(raw);
+  }
+}
+
 export default async (req: Request, context: Context) => {
   const url = new URL(req.url);
   const fileId = url.searchParams.get("fileId");
@@ -18,7 +32,6 @@ export default async (req: Request, context: Context) => {
     });
   }
 
-  // 화이트리스트 체크 (나중에 구독/해금 체크로 교체)
   if (!ALLOWED_FILE_IDS.has(fileId)) {
     return new Response(JSON.stringify({ error: "허용되지 않은 파일입니다" }), {
       status: 403,
@@ -27,36 +40,28 @@ export default async (req: Request, context: Context) => {
   }
 
   try {
-    // 서비스 계정 인증
-    const credentials = JSON.parse(process.env.GOOGLE_SA_KEY || "{}");
+    const credentials = parseServiceAccountKey();
+
     const auth = new google.auth.GoogleAuth({
       credentials,
       scopes: ["https://www.googleapis.com/auth/drive.readonly"],
     });
 
     const accessToken = await auth.getAccessToken();
+    if (!accessToken) throw new Error("access_token 발급 실패");
 
-    if (!accessToken) {
-      return new Response(JSON.stringify({ error: "인증 실패" }), {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    // 파일 메타데이터 가져오기 (파일명용)
     const drive = google.drive({ version: "v3", auth });
     const meta = await drive.files.get({ fileId, fields: "name,size,mimeType" });
 
-    // 직접 다운로드 URL 생성 (access_token 포함)
+    // 구글 드라이브에서 직접 스트리밍
     const downloadUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
-
-    // 서버가 스트리밍 프록시 (access_token 노출 없이)
     const fileResponse = await fetch(downloadUrl, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
 
     if (!fileResponse.ok) {
-      return new Response(JSON.stringify({ error: "파일 다운로드 실패" }), {
+      const errText = await fileResponse.text();
+      return new Response(JSON.stringify({ error: "파일 다운로드 실패", detail: errText }), {
         status: 502,
         headers: { "Content-Type": "application/json" },
       });
@@ -64,7 +69,7 @@ export default async (req: Request, context: Context) => {
 
     const fileName = meta.data.name || "download";
 
-    return new Response(fileResponse.body, {
+    return new Response(fileResponse.body as any, {
       headers: {
         "Content-Type": meta.data.mimeType || "application/octet-stream",
         "Content-Disposition": `attachment; filename="${encodeURIComponent(fileName)}"`,
