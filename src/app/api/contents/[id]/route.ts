@@ -90,7 +90,7 @@ export async function GET(
     if (files.length === 0 && content.gdrive_folder_id) {
       try {
         const driveFiles = await listFiles(content.gdrive_folder_id);
-        files = driveFiles.map((f) => ({
+        files = driveFiles.map((f: any) => ({
           id: f.id!,
           content_id: id,
           filename: f.name!,

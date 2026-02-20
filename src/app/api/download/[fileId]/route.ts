@@ -35,8 +35,9 @@ export async function GET(
         ...(metadata.size ? { 'Content-Length': metadata.size } : {}),
       },
     });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error('Download API error:', err);
-    return NextResponse.json({ error: '다운로드 중 오류가 발생했습니다', detail: err.message }, { status: 500 });
+    return NextResponse.json({ error: '다운로드 중 오류가 발생했습니다', detail: err?.message }, { status: 500 });
   }
 }

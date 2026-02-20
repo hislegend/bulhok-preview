@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
     try {
       const driveFiles = await listFiles(gdrive_folder_id);
       if (driveFiles.length > 0) {
-        const fileRecords = driveFiles.map((f) => ({
+        const fileRecords = driveFiles.map((f: any) => ({
           content_id: content.id,
           filename: f.name!,
           gdrive_file_id: f.id!,
