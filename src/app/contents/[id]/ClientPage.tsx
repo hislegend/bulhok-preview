@@ -157,8 +157,8 @@ export default function ClientPage({ id }: { id: string }) {
                         alert('파일 ID가 없습니다');
                         return;
                       }
-                      // 서버 프록시 다운로드 (토큰 노출 없음)
-                      window.open(`/api/download/${file.gdrive_file_id}`, '_blank');
+                      // 구글 드라이브 직접 다운로드
+                      window.open(`https://drive.google.com/uc?export=download&id=${file.gdrive_file_id}`, '_blank');
                     }}
                   >
                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
