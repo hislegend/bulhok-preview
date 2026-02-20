@@ -8,17 +8,16 @@ import { Content, ContentFile } from '@/types';
 import { DUMMY_CONTENTS, DUMMY_FILES } from '@/lib/dummyData';
 
 const CATEGORY_STYLES: Record<string, { gradient: string; icon: string }> = {
-  '도시/야경': { gradient: 'from-indigo-600 via-purple-600 to-blue-800', icon: '🌃' },
-  '자연/풍경': { gradient: 'from-emerald-500 via-teal-500 to-cyan-600', icon: '🏔️' },
-  '라이프스타일': { gradient: 'from-amber-500 via-orange-400 to-yellow-500', icon: '☕' },
-  '패션/뷰티': { gradient: 'from-pink-500 via-rose-400 to-fuchsia-500', icon: '👗' },
-  '푸드': { gradient: 'from-red-500 via-orange-500 to-amber-500', icon: '🍽️' },
-  '비즈니스': { gradient: 'from-slate-600 via-gray-500 to-zinc-600', icon: '💼' },
-  '건축/인테리어': { gradient: 'from-stone-500 via-amber-600 to-orange-700', icon: '🏛️' },
-  '스포츠/건강': { gradient: 'from-green-500 via-lime-500 to-emerald-500', icon: '💪' },
+  '노트북': { gradient: 'from-slate-700 via-gray-600 to-zinc-800', icon: '💻' },
+  '냉장고': { gradient: 'from-sky-500 via-blue-400 to-cyan-500', icon: '🧊' },
+  '카메라': { gradient: 'from-amber-600 via-orange-500 to-red-500', icon: '📷' },
+  'TV/모니터': { gradient: 'from-indigo-600 via-purple-600 to-blue-800', icon: '📺' },
+  '태블릿': { gradient: 'from-gray-700 via-slate-600 to-gray-800', icon: '📱' },
+  '생활가전': { gradient: 'from-violet-500 via-purple-400 to-fuchsia-500', icon: '🏠' },
+  '스마트폰': { gradient: 'from-emerald-500 via-teal-500 to-cyan-600', icon: '📱' },
 };
 
-const DEFAULT_STYLE = { gradient: 'from-gray-600 via-gray-500 to-gray-700', icon: '🎬' };
+const DEFAULT_STYLE = { gradient: 'from-gray-600 via-gray-500 to-gray-700', icon: '⚡' };
 
 function formatFileSize(bytes: number): string {
   if (bytes >= 1073741824) return `${(bytes / 1073741824).toFixed(1)} GB`;
