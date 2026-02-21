@@ -1,11 +1,11 @@
 import { createBrowserSupabaseClient } from './supabase';
 
-export async function signInWithGoogle() {
+export async function signInWithMagicLink(email: string) {
   const supabase = createBrowserSupabaseClient();
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
+  const { data, error } = await supabase.auth.signInWithOtp({
+    email,
     options: {
-      redirectTo: `${window.location.origin}/auth/callback`,
+      emailRedirectTo: `${window.location.origin}/auth/callback`,
     },
   });
   if (error) throw error;

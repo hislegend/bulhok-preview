@@ -1,8 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+const protectedPaths = ['/contents', '/admin', '/api/download'];
 
 export async function middleware(request: NextRequest) {
-  const response = NextResponse.next({
+  const { pathname } = request.nextUrl;
+
+  // Check if path needs protection
+  const isProtected = protectedPaths.some((p) => pathname.startsWith(p));
+  if (!isProtected) return NextResponse.next();
+
+  let response = NextResponse.next({
     request: { headers: request.headers },
   });
 
@@ -17,6 +26,9 @@ export async function middleware(request: NextRequest) {
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) => {
             request.cookies.set(name, value);
+            response = NextResponse.next({
+              request: { headers: request.headers },
+            });
             response.cookies.set(name, value, options);
           });
         },
@@ -26,38 +38,28 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  const pathname = request.nextUrl.pathname;
-
-  // Protected routes - require auth
-  if (pathname.startsWith('/contents') || pathname.startsWith('/admin')) {
-    if (!user) {
-      const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('next', pathname);
-      return NextResponse.redirect(loginUrl);
-    }
+  if (!user) {
+    const loginUrl = new URL('/login', request.url);
+    loginUrl.searchParams.set('redirect', pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
-  // Admin routes - require admin role
+  // Admin route check
   if (pathname.startsWith('/admin')) {
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')
-      .eq('id', user!.id)
+      .eq('id', user.id)
       .single();
 
-    if (!profile || profile.role !== 'admin') {
+    if (profile?.role !== 'admin') {
       return NextResponse.redirect(new URL('/contents', request.url));
     }
-  }
-
-  // Redirect logged-in users away from login
-  if (pathname === '/login' && user) {
-    return NextResponse.redirect(new URL('/contents', request.url));
   }
 
   return response;
 }
 
 export const config = {
-  matcher: ['/contents/:path*', '/admin/:path*', '/login'],
+  matcher: ['/contents/:path*', '/admin/:path*', '/api/download/:path*'],
 };

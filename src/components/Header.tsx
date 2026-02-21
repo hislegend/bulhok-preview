@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { createBrowserSupabaseClient } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
-import { getPreviewUser, previewSignOut } from '@/lib/previewAuth';
 import { Profile } from '@/types';
 
 export default function Header() {
@@ -13,47 +12,33 @@ export default function Header() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 1. 프리뷰 로그인 체크
-    const previewUser = getPreviewUser();
-    if (previewUser) {
-      setUser(previewUser);
-      setLoading(false);
-      return;
-    }
+    const supabase = createBrowserSupabaseClient();
+    supabase.auth.getUser().then(({ data: { user: authUser } }) => {
+      if (authUser) {
+        supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', authUser.id)
+          .single()
+          .then(({ data }) => {
+            setUser(data);
+            setLoading(false);
+          });
+      } else {
+        setLoading(false);
+      }
+    });
 
-    // 2. Supabase 인증 체크
-    try {
-      const supabase = createBrowserSupabaseClient();
-      supabase.auth.getUser().then(({ data: { user: authUser } }) => {
-        if (authUser) {
-          supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', authUser.id)
-            .single()
-            .then(({ data }) => {
-              setUser(data);
-              setLoading(false);
-            });
-        } else {
-          setLoading(false);
-        }
-      });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        setUser(null);
+      }
+    });
 
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-        if (!session) {
-          setUser(null);
-        }
-      });
-
-      return () => subscription.unsubscribe();
-    } catch {
-      setLoading(false);
-    }
+    return () => subscription.unsubscribe();
   }, []);
 
   const handleSignOut = async () => {
-    previewSignOut();
     try { await signOut(); } catch {}
     window.location.href = '/';
   };

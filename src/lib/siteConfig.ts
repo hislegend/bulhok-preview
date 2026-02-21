@@ -18,7 +18,7 @@ export const siteConfig = {
     titleHighlight: '매주 새롭게',
     description:
       '전문 촬영팀이 제작한 고퀄리티 영상 촬영 소스를 구독하고, 여러분의 프로젝트에 바로 활용하세요. 구독 기간에 따라 새로운 콘텐츠가 순차적으로 해금됩니다.',
-    ctaPrimary: '월 25만원으로 시작하기',
+    ctaPrimary: '로그인',
     ctaSecondary: '콘텐츠 둘러보기 →',
   },
 
@@ -63,6 +63,6 @@ export const siteConfig = {
   cta: {
     title: '지금 시작하세요',
     description: '매달 새로운 프리미엄 영상 소스가 여러분을 기다립니다.',
-    button: 'Google로 시작하기 →',
+    button: '로그인 →',
   },
 };

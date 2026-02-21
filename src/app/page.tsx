@@ -42,7 +42,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                href="/pricing"
+                href="/login"
                 className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold rounded-xl text-lg transition-all shadow-lg shadow-orange-500/25"
               >
                 {hero.ctaPrimary}
