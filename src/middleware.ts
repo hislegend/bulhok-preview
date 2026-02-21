@@ -7,6 +7,10 @@ const protectedPaths = ['/contents', '/admin', '/api/download'];
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Skip auth routes
+  if (pathname.startsWith('/auth/')) return NextResponse.next();
+  if (pathname.startsWith('/api/auth/')) return NextResponse.next();
+
   // Check if path needs protection
   const isProtected = protectedPaths.some((p) => pathname.startsWith(p));
   if (!isProtected) return NextResponse.next();
