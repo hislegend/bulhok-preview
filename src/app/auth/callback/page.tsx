@@ -9,64 +9,66 @@ export default function AuthCallbackPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const handleCallback = async () => {
-      const supabase = createBrowserSupabaseClient();
-      const params = new URLSearchParams(window.location.search);
-      const token_hash = params.get('token_hash');
-      const type = params.get('type');
+    const supabase = createBrowserSupabaseClient();
 
-      try {
-        if (token_hash && type) {
-          // Invite or magic link via token_hash
-          const { error } = await supabase.auth.verifyOtp({
-            token_hash,
-            type: type as 'invite' | 'magiclink' | 'recovery' | 'email',
-          });
-          if (error) throw error;
-        } else {
-          // PKCE flow - check if session already exists from URL hash
-          const { data: { session } } = await supabase.auth.getSession();
-          if (!session) {
-            // Try exchanging code
-            const code = params.get('code');
-            if (code) {
-              const { error } = await supabase.auth.exchangeCodeForSession(code);
-              if (error) throw error;
-            }
-          }
-        }
-
+    // Supabase client automatically detects auth params from URL hash
+    // Just wait for the auth state to change
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
         // Ensure profile exists
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('id')
-            .eq('id', user.id)
-            .single();
-
-          if (!profile) {
-            // Create profile via API (service role needed)
-            await fetch('/api/auth/profile', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                id: user.id,
-                email: user.email,
-                name: user.email?.split('@')[0],
-              }),
-            });
-          }
-        }
-
-        router.push('/contents');
-      } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : '인증 처리 중 오류가 발생했습니다.';
-        setError(message);
+        fetch('/api/auth/profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: session.user.id,
+            email: session.user.email,
+            name: session.user.email?.split('@')[0],
+          }),
+        }).finally(() => {
+          router.push('/contents');
+        });
       }
-    };
+    });
 
-    handleCallback();
+    // Also try to handle code exchange (PKCE flow)
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    if (code) {
+      supabase.auth.exchangeCodeForSession(code).then(({ error: err }) => {
+        if (err) setError(err.message);
+      });
+    }
+
+    // Check hash fragment (implicit flow)
+    const hash = window.location.hash;
+    if (hash && hash.includes('access_token')) {
+      // Supabase client should auto-detect this
+      // Give it a moment
+      setTimeout(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (session) {
+            router.push('/contents');
+          } else {
+            setError('세션을 찾을 수 없습니다.');
+          }
+        });
+      }, 1000);
+    }
+
+    // Fallback: if no auth params at all, check if already logged in
+    if (!code && !hash.includes('access_token')) {
+      setTimeout(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (session) {
+            router.push('/contents');
+          } else {
+            setError('인증 정보가 없습니다.');
+          }
+        });
+      }, 2000);
+    }
+
+    return () => subscription.unsubscribe();
   }, [router]);
 
   if (error) {
@@ -78,9 +80,7 @@ export default function AuthCallbackPage() {
           </div>
           <h2 className="text-xl font-bold text-gray-900 mb-2">인증 오류</h2>
           <p className="text-gray-500 mb-4">{error}</p>
-          <a href="/login" className="text-orange-500 hover:text-orange-600 font-medium">
-            다시 로그인하기
-          </a>
+          <a href="/login" className="text-orange-500 hover:text-orange-600 font-medium">다시 로그인하기</a>
         </div>
       </div>
     );
