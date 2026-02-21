@@ -23,7 +23,9 @@ function ContentsPageInner() {
       .then(async (res) => {
         if (!res.ok) throw new Error('API unavailable');
         const data = await res.json();
-        setContents(data.contents || []);
+        const apiContents = data.contents || [];
+        if (apiContents.length === 0) throw new Error('No data');
+        setContents(apiContents);
         setSubscription(data.subscription);
         setUnlockInfo(data.unlockInfo);
       })
