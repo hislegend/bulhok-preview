@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import ContentGrid from '@/components/ContentGrid';
+import AuthGuard from '@/components/AuthGuard';
 import { Content } from '@/types';
 import { DUMMY_CONTENTS } from '@/lib/dummyData';
 
@@ -10,7 +11,7 @@ interface ContentWithStatus extends Content {
   file_count: number;
 }
 
-export default function ContentsPage() {
+function ContentsPageInner() {
   const [contents, setContents] = useState<ContentWithStatus[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'unlocked' | 'locked'>('all');
@@ -134,4 +135,8 @@ export default function ContentsPage() {
       <ContentGrid contents={filtered} />
     </div>
   );
+}
+
+export default function ContentsPage() {
+  return <AuthGuard><ContentsPageInner /></AuthGuard>;
 }
