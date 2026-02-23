@@ -13,7 +13,7 @@ export const siteConfig = {
 
   // ── 히어로 섹션 ──
   hero: {
-    badge: '새 콘텐츠가 3일마다 해금됩니다',
+    badge: '새 콘텐츠가 정기적으로 해금됩니다',
     titleLine1: '프리미엄 영상 소스를',
     titleHighlight: '정기 구독으로',
     description:
@@ -47,16 +47,25 @@ export const siteConfig = {
     title: '심플한 요금제',
     subtitle: '하나의 플랜, 모든 콘텐츠',
     planName: '정기 구독',
-    price: '25만',
-    priceUnit: '원/월',
+    originalPrice: '500,000원',
+    discountBadge: '50% OFF',
+    price: '250,000',
+    priceUnit: '원',
+    priceLabel: '월 구독 요금',
+    // 홈 페이지용 간략 표기
+    priceShort: '25만',
+    priceShortUnit: '원/월',
     benefits: [
-      '정기적으로 새 콘텐츠 해금',
+      '구독 즉시 첫 콘텐츠 해금',
+      '정기적으로 새 콘텐츠 자동 해금',
       '해금된 콘텐츠 무제한 다운로드',
-      '고퀄리티 원본 파일',
+      '프리미엄 고퀄리티 원본 영상',
       '상업적 이용 가능',
       '신규 콘텐츠 지속 업데이트',
     ],
     ctaButton: '💬 결제 문의하기',
+    ctaSubtext: '채널톡 채팅이 열립니다',
+    cancelNote: '구독은 언제든 해지할 수 있습니다.',
   },
 
   // ── CTA 섹션 ──
@@ -64,5 +73,18 @@ export const siteConfig = {
     title: '지금 시작하세요',
     description: '매달 새로운 프리미엄 영상 소스가 여러분을 기다립니다.',
     button: '로그인 →',
+  },
+
+  // ── 푸터 ──
+  footer: {
+    brandName: '불혹청년 미디어킷',
+    description: '프리미엄 영상 촬영 소스를 정기 구독으로 만나보세요.',
+    supportEmail: 'support@wkwk.ai',
+    copyright: '© 2026 불혹청년 미디어킷. All rights reserved.',
+    links: {
+      contents: '콘텐츠',
+      pricing: '요금제',
+    },
+    supportTitle: '고객지원',
   },
 };

@@ -1,3 +1,7 @@
+import { siteConfig } from '@/lib/siteConfig';
+
+const { footer } = siteConfig;
+
 export default function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-400 py-12">
@@ -8,27 +12,27 @@ export default function Footer() {
               <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">불</span>
               </div>
-              <span className="text-xl font-bold text-white">불혹청년 미디어킷</span>
+              <span className="text-xl font-bold text-white">{footer.brandName}</span>
             </div>
-            <p className="text-sm">프리미엄 영상 촬영 소스를 정기 구독으로 만나보세요.</p>
+            <p className="text-sm">{footer.description}</p>
           </div>
           <div>
             <h3 className="text-white font-semibold mb-3">서비스</h3>
             <ul className="space-y-2 text-sm">
-              <li><a href="/contents" className="hover:text-white transition-colors">콘텐츠 둘러보기</a></li>
-              <li><a href="/pricing" className="hover:text-white transition-colors">요금제</a></li>
+              <li><a href="/contents" className="hover:text-white transition-colors">{footer.links.contents}</a></li>
+              <li><a href="/pricing" className="hover:text-white transition-colors">{footer.links.pricing}</a></li>
             </ul>
           </div>
           <div>
-            <h3 className="text-white font-semibold mb-3">고객지원</h3>
+            <h3 className="text-white font-semibold mb-3">{footer.supportTitle}</h3>
             <ul className="space-y-2 text-sm">
-              <li>이메일: support@wkwk.ai</li>
+              <li>이메일: {footer.supportEmail}</li>
               <li>운영시간: 평일 10:00 - 18:00</li>
             </ul>
           </div>
         </div>
         <div className="border-t border-gray-800 mt-8 pt-8 text-sm text-center">
-          © 2026 불혹청년 미디어킷. All rights reserved.
+          {footer.copyright}
         </div>
       </div>
     </footer>
