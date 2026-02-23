@@ -192,14 +192,27 @@ export default function AdminUploadPage() {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           />
-          <Input
-            label="해금 순서"
-            type="number"
-            placeholder="1"
-            value={releaseOrder}
-            onChange={(e) => setReleaseOrder(e.target.value)}
-            required
-          />
+          <div className="space-y-1">
+            <div className="flex items-center gap-1.5">
+              <label className="block text-sm font-medium text-gray-700">해금 순서</label>
+              <div className="group relative">
+                <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-gray-200 text-gray-500 text-xs cursor-help">?</span>
+                <div className="invisible group-hover:visible absolute bottom-6 left-1/2 -translate-x-1/2 w-64 bg-gray-900 text-white text-xs rounded-lg p-3 z-10 shadow-lg">
+                  <p className="font-medium mb-1">구독 시작일 기준 순차 해금</p>
+                  <p className="text-gray-300 leading-relaxed">1 = 구독 즉시 열림<br/>2 = 3일 후 해금<br/>3 = 6일 후 해금<br/>숫자가 클수록 나중에 해금됩니다.</p>
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                </div>
+              </div>
+            </div>
+            <input
+              type="number"
+              placeholder="1"
+              value={releaseOrder}
+              onChange={(e) => setReleaseOrder(e.target.value)}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            />
+          </div>
         </div>
 
         {/* 파일 업로드 영역 */}
