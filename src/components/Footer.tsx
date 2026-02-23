@@ -22,7 +22,7 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-semibold mb-3">고객지원</h3>
             <ul className="space-y-2 text-sm">
-              <li>이메일: support@bulhok.com</li>
+              <li>이메일: support@wkwk.ai</li>
               <li>운영시간: 평일 10:00 - 18:00</li>
             </ul>
           </div>
