@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: '불혹청년 - 프리미엄 영상 촬영 소스',
+  title: '불혹청년 미디어킷 - 프리미엄 영상 촬영 소스',
   description: '매주 새로운 고퀄리티 영상 촬영 소스를 정기 구독으로 만나보세요.',
 };
 

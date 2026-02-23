@@ -54,7 +54,7 @@ export default function Header() {
             <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">불</span>
             </div>
-            <span className="text-xl font-bold text-gray-900">불혹청년</span>
+            <span className="text-xl font-bold text-gray-900">불혹청년 미디어킷</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">

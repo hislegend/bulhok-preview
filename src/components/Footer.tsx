@@ -8,7 +8,7 @@ export default function Footer() {
               <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">불</span>
               </div>
-              <span className="text-xl font-bold text-white">불혹청년</span>
+              <span className="text-xl font-bold text-white">불혹청년 미디어킷</span>
             </div>
             <p className="text-sm">프리미엄 영상 촬영 소스를 정기 구독으로 만나보세요.</p>
           </div>
@@ -28,7 +28,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="border-t border-gray-800 mt-8 pt-8 text-sm text-center">
-          © 2026 불혹청년. All rights reserved.
+          © 2026 불혹청년 미디어킷. All rights reserved.
         </div>
       </div>
     </footer>
