@@ -1,7 +1,11 @@
 'use client';
 
 export default function PricingPage() {
-  const channelTalkUrl = 'https://42ecd2e6-9abf-4283-a44b-3d32fd48177d.channel.io/chat';
+  const openChannelTalk = () => {
+    if (typeof window !== 'undefined' && (window as unknown as Record<string, unknown>).ChannelIO) {
+      (window as unknown as Record<string, (...args: unknown[]) => void>).ChannelIO('showMessenger');
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -46,15 +50,13 @@ export default function PricingPage() {
             ))}
           </ul>
 
-          <a
-            href={channelTalkUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full py-3.5 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold rounded-xl transition-all text-lg text-center"
+          <button
+            onClick={openChannelTalk}
+            className="block w-full py-3.5 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold rounded-xl transition-all text-lg cursor-pointer"
           >
             💬 결제 문의하기
-          </a>
-          <p className="text-xs text-gray-400 mt-3">채널톡으로 연결됩니다</p>
+          </button>
+          <p className="text-xs text-gray-400 mt-3">채널톡 채팅이 열립니다</p>
         </div>
       </div>
 
