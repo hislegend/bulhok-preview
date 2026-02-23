@@ -168,7 +168,7 @@ export default function AdminUploadPage() {
 
         <Input
           label="콘텐츠 제목"
-          placeholder="예: 서울 야경 시네마틱 4K"
+          placeholder="예: Apple MacBook Pro M4 Max 16인치 언박싱"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
@@ -179,7 +179,7 @@ export default function AdminUploadPage() {
           <textarea
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             rows={3}
-            placeholder="콘텐츠에 대한 상세 설명을 입력하세요"
+            placeholder="예: 맥북 프로 16인치 개봉기, 외관 디테일, 키보드·포트 클로즈업, 벤치마크 화면 등 촬영 소스 모음"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
@@ -188,7 +188,7 @@ export default function AdminUploadPage() {
         <div className="grid grid-cols-2 gap-4">
           <Input
             label="카테고리"
-            placeholder="예: 도시, 자연, 음식"
+            placeholder="예: 노트북, 가전, 생활가전, 스마트폰, 주방가전"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           />
