@@ -35,9 +35,9 @@ export default function PricingPage() {
           <ul className="text-left space-y-3 mb-8">
             {[
               '구독 즉시 첫 콘텐츠 해금',
-              '3일마다 새 콘텐츠 자동 해금',
+              '정기적으로 새 콘텐츠 자동 해금',
               '해금된 콘텐츠 무제한 다운로드',
-              '4K 이상 고퀄리티 원본 파일',
+              '프리미엄 고퀄리티 원본 영상',
               '상업적 이용 가능',
               '신규 콘텐츠 지속 업데이트',
             ].map((item, i) => (
