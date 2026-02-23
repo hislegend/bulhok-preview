@@ -153,11 +153,11 @@ export default function ClientPage({ id }: { id: string }) {
                     variant="ghost"
                     size="sm"
                     onClick={() => {
-                      if (!file.gdrive_file_id) {
+                      if (!file.id) {
                         alert('파일 ID가 없습니다');
                         return;
                       }
-                      window.open(`/api/download/${file.gdrive_file_id}`, '_blank');
+                      window.open(`/api/download/${file.id}`, '_blank');
                     }}
                   >
                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

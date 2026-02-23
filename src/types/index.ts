@@ -21,7 +21,7 @@ export interface Content {
   title: string;
   description: string | null;
   category: string | null;
-  gdrive_folder_id: string;
+  r2_prefix: string;
   thumbnail_url: string | null;
   release_order: number;
   is_public: boolean;
@@ -32,7 +32,7 @@ export interface ContentFile {
   id: string;
   content_id: string;
   filename: string;
-  gdrive_file_id: string;
+  r2_key: string;
   file_size: number | null;
   mime_type: string | null;
   created_at: string;

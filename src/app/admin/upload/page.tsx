@@ -9,7 +9,7 @@ export default function AdminUploadPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
-  const [gdriveFolderId, setGdriveFolderId] = useState('');
+  const [r2Prefix, setR2Prefix] = useState('');
   const [releaseOrder, setReleaseOrder] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -27,7 +27,7 @@ export default function AdminUploadPage() {
           title,
           description,
           category,
-          gdrive_folder_id: gdriveFolderId,
+          r2_prefix: r2Prefix,
           release_order: releaseOrder,
         }),
       });
@@ -94,16 +94,16 @@ export default function AdminUploadPage() {
         </div>
 
         <Input
-          label="Google Drive 폴더 ID"
-          placeholder="폴더 URL에서 ID를 복사하세요"
-          value={gdriveFolderId}
-          onChange={(e) => setGdriveFolderId(e.target.value)}
+          label="R2 Prefix"
+          placeholder="예: contents/macbook-pro-16"
+          value={r2Prefix}
+          onChange={(e) => setR2Prefix(e.target.value)}
           required
         />
 
         <div className="bg-blue-50 rounded-xl p-4 text-sm text-blue-700">
-          <p className="font-medium mb-1">💡 Google Drive 연동 안내</p>
-          <p>Google Drive에 폴더를 만들고 영상 파일을 업로드한 뒤, 폴더 ID를 입력하세요. 파일 목록은 자동으로 가져옵니다.</p>
+          <p className="font-medium mb-1">Cloudflare R2 연동 안내</p>
+          <p>R2 버킷에 파일을 업로드한 뒤, prefix를 입력하세요. 해당 경로의 파일 목록은 자동으로 가져옵니다.</p>
         </div>
 
         <div className="flex gap-3 pt-4">

@@ -163,8 +163,8 @@ export default function ClientPage({ params }: { params: Promise<{ id: string }>
                   <Button
                     variant="ghost"
                     size="sm"
-                    loading={downloading === file.gdrive_file_id}
-                    onClick={() => handleDownload(file.gdrive_file_id, file.filename)}
+                    loading={downloading === file.id}
+                    onClick={() => handleDownload(file.id, file.filename)}
                   >
                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />

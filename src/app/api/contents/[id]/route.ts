@@ -2,7 +2,6 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { calculateUnlock } from '@/lib/timelock';
-import { listFiles } from '@/lib/gdrive';
 
 async function getSupabase(request: NextRequest) {
   return createServerClient(
@@ -79,34 +78,15 @@ export async function GET(
     }
 
     // Get files from DB
-    const { data: dbFiles } = await supabase
+    const { data: files } = await supabase
       .from('content_files')
       .select('*')
       .eq('content_id', id)
       .order('filename');
 
-    // If no DB files, try Google Drive
-    let files = dbFiles || [];
-    if (files.length === 0 && content.gdrive_folder_id) {
-      try {
-        const driveFiles = await listFiles(content.gdrive_folder_id);
-        files = driveFiles.map((f: { name?: string; id?: string; size?: string; mimeType?: string; createdTime?: string }) => ({
-          id: f.id!,
-          content_id: id,
-          filename: f.name!,
-          gdrive_file_id: f.id!,
-          file_size: f.size ? parseInt(f.size) : null,
-          mime_type: f.mimeType || null,
-          created_at: f.createdTime || new Date().toISOString(),
-        }));
-      } catch (driveErr) {
-        console.error('Google Drive error:', driveErr);
-      }
-    }
-
     return NextResponse.json({
       content: { ...content, unlocked: true },
-      files,
+      files: files || [],
     });
   } catch (err) {
     console.error('Content detail API error:', err);

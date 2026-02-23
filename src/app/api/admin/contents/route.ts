@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
-import { listFiles } from '@/lib/gdrive';
+import { listFiles } from '@/lib/r2';
 
 async function getSupabase(request: NextRequest) {
   return createServerClient(
@@ -41,9 +41,9 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { title, description, category, gdrive_folder_id, release_order, is_public, thumbnail_url } = body;
+    const { title, description, category, r2_prefix, release_order, is_public, thumbnail_url } = body;
 
-    if (!title || !gdrive_folder_id || !release_order) {
+    if (!title || !r2_prefix || !release_order) {
       return NextResponse.json({ error: '필수 항목을 입력해주세요' }, { status: 400 });
     }
 
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
         title,
         description: description || null,
         category: category || null,
-        gdrive_folder_id,
+        r2_prefix,
         release_order: Number(release_order),
         is_public: is_public || false,
         thumbnail_url: thumbnail_url || null,
@@ -66,22 +66,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    // Auto-sync files from Google Drive
+    // Auto-sync files from R2
     try {
-      const driveFiles = await listFiles(gdrive_folder_id);
-      if (driveFiles.length > 0) {
-        const fileRecords = driveFiles.map((f: { name?: string; id?: string; size?: string; mimeType?: string; createdTime?: string }) => ({
-          content_id: content.id,
-          filename: f.name!,
-          gdrive_file_id: f.id!,
-          file_size: f.size ? parseInt(f.size) : null,
-          mime_type: f.mimeType || null,
-        }));
+      const r2Objects = await listFiles(r2_prefix);
+      if (r2Objects.length > 0) {
+        const fileRecords = r2Objects
+          .filter((obj) => !obj.key.endsWith('/'))
+          .map((obj) => ({
+            content_id: content.id,
+            filename: obj.filename,
+            r2_key: obj.key,
+            file_size: obj.size || null,
+            mime_type: null,
+          }));
 
-        await auth.supabase.from('content_files').insert(fileRecords);
+        if (fileRecords.length > 0) {
+          await auth.supabase.from('content_files').insert(fileRecords);
+        }
       }
-    } catch (driveErr) {
-      console.error('Drive sync error:', driveErr);
+    } catch (r2Err) {
+      console.error('R2 sync error:', r2Err);
     }
 
     return NextResponse.json({ content });

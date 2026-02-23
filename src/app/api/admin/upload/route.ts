@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
-import { uploadFile } from '@/lib/gdrive';
+import { uploadFile } from '@/lib/r2';
 
 async function getSupabase(request: NextRequest) {
   return createServerClient(
@@ -38,28 +38,31 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
-    const folderId = formData.get('folderId') as string | null;
     const contentId = formData.get('contentId') as string | null;
 
-    if (!file || !folderId) {
-      return NextResponse.json({ error: '파일과 폴더 ID가 필요합니다' }, { status: 400 });
+    if (!file || !contentId) {
+      return NextResponse.json({ error: '파일과 콘텐츠 ID가 필요합니다' }, { status: 400 });
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    const uploaded = await uploadFile(folderId, file.name, file.type, buffer);
+    const r2Key = `${contentId}/${file.name}`;
 
-    // Register in DB if contentId provided
-    if (contentId && uploaded.id) {
-      await supabase.from('content_files').insert({
-        content_id: contentId,
-        filename: uploaded.name!,
-        gdrive_file_id: uploaded.id,
-        file_size: uploaded.size ? parseInt(uploaded.size) : null,
-        mime_type: uploaded.mimeType || null,
-      });
+    const uploaded = await uploadFile(r2Key, buffer, file.type);
+
+    // Register in DB
+    const { data: dbFile, error: dbError } = await supabase.from('content_files').insert({
+      content_id: contentId,
+      filename: file.name,
+      r2_key: r2Key,
+      file_size: uploaded.size,
+      mime_type: uploaded.contentType,
+    }).select().single();
+
+    if (dbError) {
+      return NextResponse.json({ error: 'DB 등록 오류: ' + dbError.message }, { status: 500 });
     }
 
-    return NextResponse.json({ file: uploaded });
+    return NextResponse.json({ file: dbFile });
   } catch (err) {
     console.error('Upload API error:', err);
     return NextResponse.json({ error: '업로드 중 오류가 발생했습니다' }, { status: 500 });
