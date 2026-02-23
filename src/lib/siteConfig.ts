@@ -79,7 +79,7 @@ export const siteConfig = {
   footer: {
     brandName: '불혹청년 미디어킷',
     description: '프리미엄 영상 촬영 소스를 정기 구독으로 만나보세요.',
-    supportEmail: 'support@wkwk.ai',
+    supportEmail: 'support@firehock.com',
     copyright: '© 2026 불혹청년 미디어킷. All rights reserved.',
     links: {
       contents: '콘텐츠',
