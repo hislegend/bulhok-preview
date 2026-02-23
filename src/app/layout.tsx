@@ -26,7 +26,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function(){var w=window;if(w.ChannelIO){return}var ch=function(){ch.c(arguments)};ch.q=[];ch.c=function(args){ch.q.push(args)};w.ChannelIO=ch;function l(){if(w.ChannelIOInitialized){return}w.ChannelIOInitialized=true;var s=document.createElement("script");s.type="text/javascript";s.async=true;s.src="https://cdn.channel.io/plugin/ch-plugin-web.js";var x=document.getElementsByTagName("script")[0];if(x.parentNode){x.parentNode.insertBefore(s,x)}}if(document.readyState==="complete"){l()}else{w.addEventListener("DOMContentLoaded",l);w.addEventListener("load",l)}})();
-              ChannelIO('boot',{"pluginKey":"4c9f2839-2f24-4792-92c8-4e6ae10abf87"});
+              ChannelIO('boot',{"pluginKey":"4c9f2839-2f24-4792-92c8-4e6ae10abf87","appearance":{"themeColor":"#f97316","profileThemeColor":"#ea580c"}});
             `,
           }}
         />
