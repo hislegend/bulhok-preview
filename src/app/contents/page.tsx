@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import ContentGrid from '@/components/ContentGrid';
-import AuthGuard from '@/components/AuthGuard';
+// import AuthGuard from '@/components/AuthGuard'; // 최종 검토 후 복원
 import { Content } from '@/types';
 import { DUMMY_CONTENTS } from '@/lib/dummyData';
 
@@ -140,5 +140,5 @@ function ContentsPageInner() {
 }
 
 export default function ContentsPage() {
-  return <AuthGuard><ContentsPageInner /></AuthGuard>;
+  return <ContentsPageInner />; // TODO: 최종 검토 후 AuthGuard 복원
 }
