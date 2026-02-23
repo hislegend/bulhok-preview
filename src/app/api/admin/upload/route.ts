@@ -36,26 +36,52 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '관리자 권한이 필요합니다' }, { status: 403 });
     }
 
-    const formData = await request.formData();
-    const file = formData.get('file') as File | null;
-    const contentId = formData.get('contentId') as string | null;
+    const contentType = request.headers.get('content-type') || '';
 
-    if (!file || !contentId) {
-      return NextResponse.json({ error: '파일과 콘텐츠 ID가 필요합니다' }, { status: 400 });
+    let contentId: string;
+    let filename: string;
+    let r2Key: string;
+    let fileSize: number | null = null;
+    let mimeType: string | null = null;
+
+    if (contentType.includes('application/json')) {
+      // JSON mode: file already uploaded to R2 via presigned URL, just register in DB
+      const body = await request.json();
+      contentId = body.contentId;
+      filename = body.filename;
+      r2Key = body.r2Key;
+      fileSize = body.fileSize || null;
+      mimeType = body.mimeType || null;
+
+      if (!contentId || !filename || !r2Key) {
+        return NextResponse.json({ error: 'contentId, filename, r2Key 필요' }, { status: 400 });
+      }
+    } else {
+      // FormData mode: upload to R2 (legacy, small files only)
+      const formData = await request.formData();
+      const file = formData.get('file') as File | null;
+      const cid = formData.get('contentId') as string | null;
+
+      if (!file || !cid) {
+        return NextResponse.json({ error: '파일과 콘텐츠 ID가 필요합니다' }, { status: 400 });
+      }
+
+      contentId = cid;
+      filename = file.name;
+      r2Key = `${contentId}/${file.name}`;
+      const buffer = Buffer.from(await file.arrayBuffer());
+      const uploaded = await uploadFile(r2Key, buffer, file.type);
+      fileSize = uploaded.size;
+      mimeType = uploaded.contentType;
     }
-
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const r2Key = `${contentId}/${file.name}`;
-
-    const uploaded = await uploadFile(r2Key, buffer, file.type);
 
     // Register in DB
     const { data: dbFile, error: dbError } = await supabase.from('content_files').insert({
       content_id: contentId,
-      filename: file.name,
+      filename,
       r2_key: r2Key,
-      file_size: uploaded.size,
-      mime_type: uploaded.contentType,
+      file_size: fileSize,
+      mime_type: mimeType,
     }).select().single();
 
     if (dbError) {

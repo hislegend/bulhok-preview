@@ -49,15 +49,22 @@ export default function AdminUploadPage() {
   };
 
   const uploadFile = async (contentId: string, uploadFile: UploadFile, index: number) => {
-    const formData = new FormData();
-    formData.append('file', uploadFile.file);
-    formData.append('contentId', contentId);
+    const r2Key = `${contentId}/${uploadFile.file.name}`;
 
-    setFiles(prev => prev.map((f, i) => i === index ? { ...f, status: 'uploading', progress: 10 } : f));
+    setFiles(prev => prev.map((f, i) => i === index ? { ...f, status: 'uploading', progress: 5 } : f));
 
     try {
+      // 1. Get presigned URL from our API
+      const presignRes = await fetch('/api/admin/presign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: r2Key, contentType: uploadFile.file.type || 'application/octet-stream' }),
+      });
+      if (!presignRes.ok) throw new Error('서명 URL 생성 실패');
+      const { url } = await presignRes.json();
+
+      // 2. Upload directly to R2 via presigned URL (bypasses Netlify size limits)
       const xhr = new XMLHttpRequest();
-      
       await new Promise<void>((resolve, reject) => {
         xhr.upload.onprogress = (e) => {
           if (e.lengthComputable) {
@@ -66,17 +73,29 @@ export default function AdminUploadPage() {
           }
         };
         xhr.onload = () => {
-          if (xhr.status >= 200 && xhr.status < 300) {
-            setFiles(prev => prev.map((f, i) => i === index ? { ...f, status: 'done', progress: 100 } : f));
-            resolve();
-          } else {
-            reject(new Error(`업로드 실패: ${xhr.status}`));
-          }
+          if (xhr.status >= 200 && xhr.status < 300) resolve();
+          else reject(new Error(`R2 업로드 실패: ${xhr.status}`));
         };
         xhr.onerror = () => reject(new Error('네트워크 오류'));
-        xhr.open('POST', '/api/admin/upload');
-        xhr.send(formData);
+        xhr.open('PUT', url);
+        xhr.setRequestHeader('Content-Type', uploadFile.file.type || 'application/octet-stream');
+        xhr.send(uploadFile.file);
       });
+
+      // 3. Register file in DB
+      await fetch('/api/admin/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contentId,
+          filename: uploadFile.file.name,
+          r2Key,
+          fileSize: uploadFile.file.size,
+          mimeType: uploadFile.file.type || null,
+        }),
+      });
+
+      setFiles(prev => prev.map((f, i) => i === index ? { ...f, status: 'done', progress: 100 } : f));
     } catch (err) {
       setFiles(prev => prev.map((f, i) => i === index
         ? { ...f, status: 'error', error: err instanceof Error ? err.message : '업로드 실패' }
