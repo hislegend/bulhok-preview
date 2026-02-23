@@ -56,7 +56,7 @@ export const siteConfig = {
       '상업적 이용 가능',
       '신규 콘텐츠 지속 업데이트',
     ],
-    ctaButton: '구독 시작하기',
+    ctaButton: '💬 결제 문의하기',
   },
 
   // ── CTA 섹션 ──

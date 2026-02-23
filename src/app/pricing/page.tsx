@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 export default function PricingPage() {
-  const [showModal, setShowModal] = useState(false);
+  const channelTalkUrl = 'https://crabz.channel.io';
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -19,11 +18,15 @@ export default function PricingPage() {
             🔥 정기 구독
           </div>
 
+          <div className="mb-1">
+            <span className="text-2xl text-gray-400 line-through mr-2">500,000원</span>
+            <span className="inline-flex items-center bg-red-100 text-red-600 px-2 py-0.5 rounded-full text-xs font-bold">50% OFF</span>
+          </div>
           <div className="mb-2">
             <span className="text-5xl font-bold text-gray-900">250,000</span>
             <span className="text-xl text-gray-500">원</span>
           </div>
-          <p className="text-gray-400 mb-8">매월 자동 결제</p>
+          <p className="text-gray-400 mb-8">월 구독 요금</p>
 
           <ul className="text-left space-y-3 mb-8">
             {[
@@ -43,41 +46,21 @@ export default function PricingPage() {
             ))}
           </ul>
 
-          <button
-            onClick={() => setShowModal(true)}
-            className="block w-full py-3.5 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold rounded-xl transition-all text-lg"
+          <a
+            href={channelTalkUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full py-3.5 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold rounded-xl transition-all text-lg text-center"
           >
-            결제하기
-          </button>
+            💬 결제 문의하기
+          </a>
+          <p className="text-xs text-gray-400 mt-3">채널톡으로 연결됩니다</p>
         </div>
       </div>
 
       <div className="mt-8 text-center text-sm text-gray-400">
         <p>구독은 언제든 해지할 수 있습니다.</p>
       </div>
-
-      {/* Coming Soon Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4" onClick={() => setShowModal(false)}>
-          <div className="bg-white rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-3xl">🚀</span>
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">서비스 준비 중입니다</h3>
-            <p className="text-gray-500 mb-6">
-              결제 시스템을 준비하고 있습니다.<br />
-              곧 만나볼 수 있으니 조금만 기다려주세요!
-            </p>
-            <p className="text-sm text-orange-500 font-medium mb-6">Coming Soon</p>
-            <button
-              onClick={() => setShowModal(false)}
-              className="w-full py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-colors"
-            >
-              확인
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

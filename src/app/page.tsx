@@ -91,10 +91,15 @@ export default function Home() {
               <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm font-medium mb-6">
                 {pricing.planName}
               </div>
-              <div className="mb-6">
+              <div className="mb-1">
+                <span className="text-2xl text-gray-400 line-through mr-2">50만원</span>
+                <span className="inline-flex items-center bg-red-100 text-red-600 px-2 py-0.5 rounded-full text-xs font-bold">50% OFF</span>
+              </div>
+              <div className="mb-2">
                 <span className="text-5xl font-bold text-gray-900">{pricing.price}</span>
                 <span className="text-xl text-gray-500">{pricing.priceUnit}</span>
               </div>
+              <p className="text-gray-400 text-sm mb-6">월 구독 요금</p>
               <ul className="text-left space-y-3 mb-8">
                 {pricing.benefits.map((item, i) => (
                   <li key={i} className="flex items-center gap-3">
