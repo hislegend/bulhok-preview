@@ -1,7 +1,7 @@
 'use client';
 
 export default function PricingPage() {
-  const channelTalkUrl = 'https://crabz.channel.io';
+  const channelTalkUrl = 'https://42ecd2e6-9abf-4283-a44b-3d32fd48177d.channel.io/chat';
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
